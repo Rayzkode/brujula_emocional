@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "817978465446",
+    "project_id": "brujula-9cd97",
+    "storage_bucket": "brujula-9cd97.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:817978465446:android:58aea95dc030764fc2e867",
+        "android_client_info": {
+          "package_name": "com.example.brujula_emocional"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCjoYpau5eUtu7VCXBoYguLSWA-Ho5lsT8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
