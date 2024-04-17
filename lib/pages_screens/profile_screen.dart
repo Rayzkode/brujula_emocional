@@ -2,31 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:brujula_emocional/appColors.dart';
 import 'package:brujula_emocional/services/firebase_auth_methods.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
 
-class PageThree extends StatelessWidget {
-  Widget textField({required String hintText}) {
-    return Material(
-      elevation: 4,
-      shadowColor: AppColors.primaryColor,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      child: TextField(
-        decoration: InputDecoration(
-            hintText: hintText,
-            hintStyle: const TextStyle(
-                letterSpacing: 2,
-                color: Colors.black54,
-                fontWeight: FontWeight.bold),
-            fillColor: Colors.white30,
-            filled: true,
-            border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10.0),
-                borderSide: BorderSide.none)),
-      ),
-    );
-  }
-
+class profile_screen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final user = context.read<FirebaseAuthMethods>().user;

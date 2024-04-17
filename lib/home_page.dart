@@ -1,7 +1,7 @@
 import 'package:brujula_emocional/appColors.dart';
-import 'package:brujula_emocional/pages_screens/PageOne.dart';
-import 'package:brujula_emocional/pages_screens/PageThree.dart';
-import 'package:brujula_emocional/pages_screens/PageTwo.dart';
+import 'package:brujula_emocional/pages_screens/location_screen.dart';
+import 'package:brujula_emocional/pages_screens/profile_screen.dart';
+import 'package:brujula_emocional/pages_screens/test_screen.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -15,9 +15,9 @@ class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
 
   final List<Widget> _pages = [
-    PageOne(),
-    PageTwo(),
-    PageThree(),
+    location_screen(),
+    test_screen(),
+    profile_screen(),
   ];
 
   void _onItemTapped(int index) {
@@ -70,7 +70,7 @@ class _HomePageState extends State<HomePage> {
                 Navigator.pop(context); // Cierra el cajón lateral primero
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => PageThree()),
+                  MaterialPageRoute(builder: (context) => profile_screen()),
                 );
               },
             ),

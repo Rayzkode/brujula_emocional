@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
-class PageOne extends StatelessWidget {
-  const PageOne({super.key});
-
+class test_screen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -20,11 +18,12 @@ class PageOne extends StatelessWidget {
             height: 6 * 21,
             child: Row(
               children: [
-                Expanded(flex: 2, child: Image.asset("assets/images/maps.png")),
+                Expanded(
+                    flex: 2, child: Image.asset("assets/images/2995440.png")),
                 Expanded(
                     flex: 2,
                     child: Text(
-                      "Clinica tal",
+                      "Test tal",
                       style: TextStyle(fontSize: 30),
                     ))
               ],
@@ -42,11 +41,12 @@ class PageOne extends StatelessWidget {
             height: 6 * 21,
             child: Row(
               children: [
-                Expanded(flex: 2, child: Image.asset("assets/images/maps.png")),
+                Expanded(
+                    flex: 2, child: Image.asset("assets/images/2995440.png")),
                 Expanded(
                     flex: 2,
                     child: Text(
-                      "Clinica tal",
+                      "Test tal",
                       style: TextStyle(fontSize: 30),
                     ))
               ],
@@ -64,11 +64,12 @@ class PageOne extends StatelessWidget {
             height: 6 * 21,
             child: Row(
               children: [
-                Expanded(flex: 2, child: Image.asset("assets/images/maps.png")),
+                Expanded(
+                    flex: 2, child: Image.asset("assets/images/2995440.png")),
                 Expanded(
                     flex: 2,
                     child: Text(
-                      "Clinica tal",
+                      "Test tal",
                       style: TextStyle(fontSize: 30),
                     ))
               ],
@@ -86,11 +87,12 @@ class PageOne extends StatelessWidget {
             height: 6 * 21,
             child: Row(
               children: [
-                Expanded(flex: 2, child: Image.asset("assets/images/maps.png")),
+                Expanded(
+                    flex: 2, child: Image.asset("assets/images/2995440.png")),
                 Expanded(
                     flex: 2,
                     child: Text(
-                      "Clinica tal",
+                      "Test tal",
                       style: TextStyle(fontSize: 30),
                     ))
               ],
