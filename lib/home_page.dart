@@ -1,8 +1,34 @@
 import 'package:brujula_emocional/appColors.dart';
+import 'package:brujula_emocional/pages_screens/clinic_register_screen.dart';
+import 'package:brujula_emocional/pages_screens/clinic_screen.dart';
 import 'package:brujula_emocional/pages_screens/location_screen.dart';
 import 'package:brujula_emocional/pages_screens/profile_screen.dart';
 import 'package:brujula_emocional/pages_screens/test_screen.dart';
 import 'package:flutter/material.dart';
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  // This widget is the root of your application.
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        useMaterial3: true,
+      ),
+      home: const HomePage(),
+      routes: <String, WidgetBuilder>{
+        '/home': (BuildContext context) => const HomePage(),
+        '/profile': (BuildContext context) => profile_screen(),
+        '/maps': (BuildContext context) => clinic_page(),
+        '/clinic_register': (BuildContext context) =>
+            const clinic_register(title: 'clinic_register'),
+      },
+    );
+  }
+}
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -137,11 +163,18 @@ class _HomePageState extends State<HomePage> {
             ListTile(
               leading: Icon(Icons.perm_device_information_rounded),
               title: Text('Terminos y condiciones'),
+              onTap: () {},
+            ),
+            ListTile(
+              leading: Icon(Icons.add_box_rounded),
+              title: Text('Agregar clinica'),
               onTap: () {
-                // Update the state of the app
-                // ...
-                // Then close the drawer
-                Navigator.pop(context);
+                Navigator.pop(context); // Cerrar el cajón lateral primero
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            clinic_register(title: 'clinic_register')));
               },
             ),
           ],
