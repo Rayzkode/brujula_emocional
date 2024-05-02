@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 class clinic_register extends StatefulWidget {
-  const clinic_register({super.key, required this.title});
+  const clinic_register({Key? key, required this.title}) : super(key: key);
   final String title;
 
   @override
@@ -16,282 +16,223 @@ class clinic_register extends StatefulWidget {
 
 class _clinic_registerState extends State<clinic_register> {
   File? _image;
-  String imageUrl = '';
-  final _nombreController = TextEditingController();
-  final _direccionController = TextEditingController();
-  final _horarioController = TextEditingController();
-  final _planController = TextEditingController();
-  final _tratamientosController = TextEditingController();
-  final _imagenController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+  final TextEditingController _nombreController = TextEditingController();
+  final TextEditingController _direccionController = TextEditingController();
+  final TextEditingController _sectorController = TextEditingController();
+  final TextEditingController _serviciosController = TextEditingController();
+  final TextEditingController _descripcionController = TextEditingController();
 
-  @override
-  void dispose() {
-    _nombreController.dispose();
-    _direccionController.dispose();
-    _horarioController.dispose();
-    _planController.dispose();
-    _tratamientosController.dispose();
-    _imagenController.dispose();
+  Map<String, String> _horarios = {
+    "Lunes": "",
+    "Martes": "",
+    "Miércoles": "",
+    "Jueves": "",
+    "Viernes": "",
+    "Sábado": "",
+    "Domingo": "",
+  };
+
+  Future<void> _selectImage() async {
+    final picker = ImagePicker();
+    final pickedImage = await picker.pickImage(source: ImageSource.gallery);
+    if (pickedImage != null) {
+      setState(() {
+        _image = File(pickedImage.path);
+      });
+    }
   }
 
-  void registerClinic() async {
-    addClinicDetails(
-      _nombreController.text.trim(),
-      _direccionController.text.trim(),
-      _horarioController.text.trim(),
-      _planController.text.trim(),
-      _tratamientosController.text.trim(),
-      imageUrl.trim(),
-    );
+  Future<void> _uploadImage() async {
+    if (_image != null) {
+      final uniqueFileName = DateTime.now().millisecondsSinceEpoch.toString();
+      final referenceRoot = FirebaseStorage.instance.ref();
+      final referenceDirImages = referenceRoot.child('images');
+      final referenceImageToUpload = referenceDirImages.child(uniqueFileName);
+
+      try {
+        await referenceImageToUpload.putFile(_image!);
+        final imageUrl = await referenceImageToUpload.getDownloadURL();
+        _registerClinic(imageUrl);
+      } catch (e) {
+        // Manejo de errores (puedes agregar un mensaje de error aquí)
+      }
+    } else {
+      // Mostrar un mensaje de que no se ha seleccionado ninguna imagen
+      print('No se ha seleccionado ninguna imagen');
+    }
   }
 
-  Future addClinicDetails(String nombre, String direccion, String horario,
-      String plan, String tratamientos, String imagen) async {
+  void _registerClinic(String imageUrl) async {
     await FirebaseFirestore.instance.collection('clinics').add({
-      'nombre': nombre,
-      'direccion': direccion,
-      'horario': horario,
-      'plan': plan,
-      'tratamientos': tratamientos,
-      'imagen': imagen,
+      'nombre': _nombreController.text.trim(),
+      'direccion': _direccionController.text.trim(),
+      'horarios': _horarios,
+      'sector': _sectorController.text.trim(),
+      'servicios': _serviciosController.text.trim(),
+      'descripcion': _descripcionController.text.trim(),
+      'imagen': imageUrl,
+    });
+
+    // Limpiar los controladores de texto después de registrar la clínica
+    _nombreController.clear();
+    _direccionController.clear();
+    _sectorController.clear();
+    _serviciosController.clear();
+    _descripcionController.clear();
+    setState(() {
+      _image = null;
     });
   }
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'BRUJULA EMOCIONAL',
-        ),
+        title: const Text('BRUJULA EMOCIONAL'),
         backgroundColor: AppColors.secondaryColor,
       ),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(30.0),
-          child: Container(
-            padding: EdgeInsets.symmetric(
-                horizontal: 2,
-                vertical: MediaQuery.of(context).size.height * 0.01),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(30),
-              color: Colors.white,
-            ),
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset(
-                    'assets/images/Compass.png',
-                    width: 120,
+          child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset(
+                  'assets/images/Compass.png',
+                  width: 120,
+                ),
+                const SizedBox(height: 20),
+                const Text(
+                  'Registro de clínica',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 30,
                   ),
-                  const SizedBox(
-                    height: 20,
+                ),
+                const SizedBox(height: 28),
+                // TextFields
+                ..._buildTextFields(),
+                const SizedBox(height: 10),
+                // ExpansionTile para los horarios
+                ExpansionTile(
+                  title: const Text('Horarios'),
+                  children: [_buildHorariosInput()],
+                ),
+                const SizedBox(height: 10),
+                // Image Picker
+                IconButton(
+                  onPressed: _selectImage,
+                  icon: const Icon(Icons.camera_enhance),
+                ),
+                const SizedBox(height: 10),
+                // Image Preview
+                Center(
+                  child: _image == null
+                      ? const Text('No se ha seleccionado ninguna imagen')
+                      : Image.file(_image!),
+                ),
+                const SizedBox(height: 10),
+                // Register Button
+                ElevatedButton(
+                  onPressed: _uploadImage,
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 90, vertical: 20),
+                    backgroundColor: AppColors.secondaryColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                   ),
-                  //hello again
-                  const Text(
-                    'Registro de clinica',
+                  child: const Text(
+                    'Registrar clínica',
                     style: TextStyle(
+                      color: Colors.white,
                       fontWeight: FontWeight.bold,
-                      fontSize: 30,
+                      fontSize: 18,
                     ),
                   ),
-                  const SizedBox(
-                    height: 28,
-                  ),
-                  //email textfield
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: const Color.fromARGB(144, 244, 244, 244),
-                        border: Border.all(color: AppColors.secondaryColor),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.only(left: 20.0),
-                        child: TextField(
-                          controller: _nombreController,
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: 'Nombre de la clinica',
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: const Color.fromARGB(144, 244, 244, 244),
-                        border: Border.all(color: AppColors.secondaryColor),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.only(left: 20.0),
-                        child: TextField(
-                          controller: _direccionController,
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: 'Direccion',
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: const Color.fromARGB(144, 244, 244, 244),
-                        border: Border.all(color: AppColors.secondaryColor),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 20.0),
-                        child: TextField(
-                          controller: _horarioController,
-                          decoration: const InputDecoration(
-                            border: InputBorder.none,
-                            hintText: 'Horario',
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: const Color.fromARGB(144, 244, 244, 244),
-                        border: Border.all(color: AppColors.secondaryColor),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 20.0),
-                        child: TextField(
-                          controller: _planController,
-                          decoration: const InputDecoration(
-                            border: InputBorder.none,
-                            hintText: 'Planes',
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: const Color.fromARGB(144, 244, 244, 244),
-                        border: Border.all(color: AppColors.secondaryColor),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 20.0),
-                        child: TextField(
-                          controller: _tratamientosController,
-                          decoration: const InputDecoration(
-                            border: InputBorder.none,
-                            hintText: 'Tratamientos',
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  IconButton(
-                      onPressed: () async {
-                        ImagePicker imagePicker = ImagePicker();
-                        XFile? file = await imagePicker.pickImage(
-                            source: ImageSource.gallery);
-                        print('${file?.path}');
-
-                        setState(() {
-                          if (file != null) {
-                            _image = File(file.path);
-                          }
-                        });
-                      },
-                      icon: Icon(Icons.camera_enhance)),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Center(
-                    child: _image == null
-                        ? Text('No Image selected')
-                        : Image.file(_image!),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  ElevatedButton(
-                    onPressed: () async {
-                      if (_image != null) {
-                        // Subida de la imagen al almacenamiento en la nube
-                        String uniqueFileName =
-                            DateTime.now().millisecondsSinceEpoch.toString();
-                        Reference referenceRoot =
-                            FirebaseStorage.instance.ref();
-                        Reference referenceDirImages =
-                            referenceRoot.child('images');
-                        Reference referenceImageToUpload =
-                            referenceDirImages.child('${uniqueFileName}');
-
-                        try {
-                          await referenceImageToUpload.putFile(_image!);
-                          imageUrl =
-                              await referenceImageToUpload.getDownloadURL();
-                          // Llamar a la función para registrar la clínica después de subir la imagen
-                          registerClinic();
-                        } catch (e) {
-                          // Manejo de errores (puedes agregar un mensaje de error aquí)
-                        }
-                      } else {
-                        // Mostrar un mensaje de que no se ha seleccionado ninguna imagen
-                        print('No se ha seleccionado ninguna imagen');
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 90, vertical: 20),
-                      backgroundColor: AppColors.secondaryColor,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                    child: const Text(
-                      'Registrar clinica',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),
       ),
+    );
+  }
+
+  List<Widget> _buildTextFields() {
+    return [
+      _buildTextField(_nombreController, 'Nombre de la clínica',
+          'Ingrese el nombre de la clínica'),
+      _buildTextField(_direccionController, 'Dirección',
+          'Ingrese la dirección de la clínica'),
+      _buildTextField(_sectorController, 'Sector',
+          'Ingrese el sector al que va dirigida la clínica'),
+      _buildTextField(_serviciosController, 'Servicios',
+          'Ingrese los servicios de la clínica'),
+      _buildTextField(_descripcionController, 'Descripcion',
+          'Ingrese unad descripcion de la clínica'),
+    ];
+  }
+
+  Widget _buildTextField(
+      TextEditingController controller, String label, String hint) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 6),
+      child: TextFormField(
+        controller: controller,
+        decoration: InputDecoration(
+          labelText: label,
+          hintText: hint,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'Por favor, ingrese $label';
+          }
+          return null;
+        },
+      ),
+    );
+  }
+
+  Widget _buildHorariosInput() {
+    return Column(
+      children: _horarios.entries.map((entry) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 6),
+          child: Row(
+            children: [
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 5.0, vertical: 6),
+                child: Text(entry.key),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: TextFormField(
+                  decoration: InputDecoration(
+                    hintText: 'Ingrese el horario',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  onChanged: (value) {
+                    setState(() {
+                      _horarios[entry.key] = value;
+                    });
+                  },
+                ),
+              ),
+            ],
+          ),
+        );
+      }).toList(),
     );
   }
 }
