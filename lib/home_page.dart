@@ -123,11 +123,6 @@ class _HomePageState extends State<HomePage> {
         onTap: () => Navigator.pop(context),
       ),
       _buildDrawerItem(
-        icon: Icons.language,
-        title: 'Idioma',
-        onTap: () => Navigator.pop(context),
-      ),
-      _buildDrawerItem(
         icon: Icons.lock,
         title: 'PIN',
         onTap: () => Navigator.pop(context),

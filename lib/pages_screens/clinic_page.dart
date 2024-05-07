@@ -93,22 +93,22 @@ class _clinic_pageState extends State<clinic_page> {
                     ),
                   ),
                 ),
-                const Align(
+                Align(
                   alignment: Alignment.topLeft,
                   child: Padding(
-                    padding: EdgeInsets.only(left: 20, right: 20, top: 2),
+                    padding: const EdgeInsets.only(left: 20, right: 20, top: 2),
                     child: FittedBox(
                       fit: BoxFit.scaleDown,
                       child: Row(
                         children: [
-                          Icon(
+                          const Icon(
                             Icons.location_on_outlined,
                             size: 50,
                           ),
                           Text(
-                            "Calle ayale numero cuarenta cincuenta y uno y dadada",
+                            direccion,
                             textAlign: TextAlign.left,
-                            style: TextStyle(
+                            style: const TextStyle(
                               letterSpacing: 1,
                               color: Colors.black54,
                               fontWeight: FontWeight.bold,
@@ -122,7 +122,7 @@ class _clinic_pageState extends State<clinic_page> {
                 ),
                 const SizedBox(height: 28),
 
-                Text(
+                const Text(
                   "HORARIOS",
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
@@ -130,7 +130,6 @@ class _clinic_pageState extends State<clinic_page> {
                       fontSize: 20),
                 ),
                 const SizedBox(height: 28),
-
                 // Imprimir los horarios ordenados
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
