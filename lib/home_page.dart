@@ -1,4 +1,7 @@
 import 'package:brujula_emocional/appColors.dart';
+import 'package:brujula_emocional/side_screens/ConfigScreen.dart';
+import 'package:brujula_emocional/side_screens/TemaScreen.dart';
+import 'package:brujula_emocional/side_screens/TermsScreen.dart';
 import 'package:flutter/material.dart';
 
 import 'pages_screens/clinic_page.dart';
@@ -120,7 +123,10 @@ class _HomePageState extends State<HomePage> {
       _buildDrawerItem(
         icon: Icons.sunny,
         title: 'Tema',
-        onTap: () => Navigator.pop(context),
+        onTap: () => {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => TemaScreen()))
+        },
       ),
       _buildDrawerItem(
         icon: Icons.lock,
@@ -130,12 +136,18 @@ class _HomePageState extends State<HomePage> {
       _buildDrawerItem(
         icon: Icons.settings,
         title: 'Configuracion',
-        onTap: () => Navigator.pop(context),
+        onTap: () => {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => ConfigScreen()))
+        },
       ),
       _buildDrawerItem(
         icon: Icons.perm_device_information_rounded,
         title: 'Terminos y condiciones',
-        onTap: () => Navigator.pop(context),
+        onTap: () => {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => TermsScreen()))
+        },
       ),
       _buildDrawerItem(
         icon: Icons.add_box_rounded,
