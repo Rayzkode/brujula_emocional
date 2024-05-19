@@ -16,12 +16,15 @@ class clinic_register extends StatefulWidget {
 
 class _clinic_registerState extends State<clinic_register> {
   File? _image;
+  File? _logo;
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _nombreController = TextEditingController();
   final TextEditingController _direccionController = TextEditingController();
   final TextEditingController _sectorController = TextEditingController();
   final TextEditingController _serviciosController = TextEditingController();
   final TextEditingController _descripcionController = TextEditingController();
+  final TextEditingController _telefonoController = TextEditingController();
+  final TextEditingController _redesController = TextEditingController();
 
   Map<String, String> _horarios = {
     "Lunes": "",
@@ -43,27 +46,46 @@ class _clinic_registerState extends State<clinic_register> {
     }
   }
 
+  Future<void> _selectLogo() async {
+    final picker = ImagePicker();
+    final pickedImage = await picker.pickImage(source: ImageSource.gallery);
+    if (pickedImage != null) {
+      setState(() {
+        _logo = File(pickedImage.path);
+      });
+    }
+  }
+
   Future<void> _uploadImage() async {
-    if (_image != null) {
+    if (_image != null && _logo != null) {
       final uniqueFileName = DateTime.now().millisecondsSinceEpoch.toString();
       final referenceRoot = FirebaseStorage.instance.ref();
       final referenceDirImages = referenceRoot.child('images');
       final referenceImageToUpload = referenceDirImages.child(uniqueFileName);
 
+      final uniqueFileNameLogo =
+          DateTime.now().millisecondsSinceEpoch.toString();
+      final referenceRootLogo = FirebaseStorage.instance.ref();
+      final referenceDirImagesLogo = referenceRootLogo.child('images');
+      final referenceImageToUploadLogo =
+          referenceDirImagesLogo.child(uniqueFileNameLogo);
+
       try {
         await referenceImageToUpload.putFile(_image!);
+        await referenceImageToUploadLogo.putFile(_logo!);
         final imageUrl = await referenceImageToUpload.getDownloadURL();
-        _registerClinic(imageUrl);
+        final logoUrl = await referenceImageToUploadLogo.getDownloadURL();
+        _registerClinic(imageUrl, logoUrl);
       } catch (e) {
         // Manejo de errores (puedes agregar un mensaje de error aquí)
       }
     } else {
-      // Mostrar un mensaje de que no se ha seleccionado ninguna imagen
-      print('No se ha seleccionado ninguna imagen');
+      // Mostrar un mensaje de que no se ha seleccionado alguna imagen
+      print('No se ha seleccionado alguna imagen');
     }
   }
 
-  void _registerClinic(String imageUrl) async {
+  void _registerClinic(String imageUrl, String logoUrl) async {
     await FirebaseFirestore.instance.collection('clinics').add({
       'nombre': _nombreController.text.trim(),
       'direccion': _direccionController.text.trim(),
@@ -71,7 +93,10 @@ class _clinic_registerState extends State<clinic_register> {
       'sector': _sectorController.text.trim(),
       'servicios': _serviciosController.text.trim(),
       'descripcion': _descripcionController.text.trim(),
+      'telefono': _telefonoController.text.trim(),
+      'redes': _redesController.text.trim(),
       'imagen': imageUrl,
+      'logo': logoUrl
     });
 
     // Limpiar los controladores de texto después de registrar la clínica
@@ -80,8 +105,11 @@ class _clinic_registerState extends State<clinic_register> {
     _sectorController.clear();
     _serviciosController.clear();
     _descripcionController.clear();
+    _telefonoController.clear();
+    _redesController.clear();
     setState(() {
       _image = null;
+      _logo = null;
     });
   }
 
@@ -112,7 +140,19 @@ class _clinic_registerState extends State<clinic_register> {
                     fontSize: 30,
                   ),
                 ),
-                const SizedBox(height: 28),
+                const SizedBox(height: 10),
+                IconButton(
+                  onPressed: _selectLogo,
+                  icon: const Icon(Icons.camera_enhance),
+                ),
+                Center(
+                  child: _logo == null
+                      ? const Text('No se ha seleccionado ninguna imagen')
+                      : Image.file(_logo!),
+                ),
+                Text("Logo"),
+                const SizedBox(height: 15),
+
                 // TextFields
                 ..._buildTextFields(),
                 const SizedBox(height: 10),
@@ -174,7 +214,11 @@ class _clinic_registerState extends State<clinic_register> {
       _buildTextField(_serviciosController, 'Servicios',
           'Ingrese los servicios de la clínica'),
       _buildTextField(_descripcionController, 'Descripcion',
-          'Ingrese unad descripcion de la clínica'),
+          'Ingrese una descripcion de la clínica'),
+      _buildTextField(_telefonoController, 'Telefono',
+          'Ingrese un numero de telefono de la clínica'),
+      _buildTextField(
+          _redesController, 'Pagina', 'Ingrese unad pagina de la clínica'),
     ];
   }
 

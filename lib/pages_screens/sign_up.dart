@@ -1,9 +1,13 @@
+import 'dart:io';
+
 import 'package:brujula_emocional/appColors.dart';
 import 'package:brujula_emocional/pages_screens/login_page.dart';
 import 'package:brujula_emocional/services/firebase_auth_methods.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({Key? key}) : super(key: key);
@@ -13,6 +17,7 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
+  File? _image;
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
@@ -22,16 +27,14 @@ class _SignUpPageState extends State<SignUpPage> {
   final _genreController = TextEditingController();
   final _countryController = TextEditingController();
 
-  @override
-  void dispose() {
-    super.dispose();
-    emailController.dispose();
-    passwordController.dispose();
-    _firstNameController.dispose();
-    _lastNameController.dispose();
-    _ageController.dispose();
-    _genreController.dispose();
-    _countryController.dispose();
+  Future<void> _selectImage() async {
+    final picker = ImagePicker();
+    final pickedImage = await picker.pickImage(source: ImageSource.gallery);
+    if (pickedImage != null) {
+      setState(() {
+        _image = File(pickedImage.path);
+      });
+    }
   }
 
   void signUpUser() async {
@@ -42,14 +45,30 @@ class _SignUpPageState extends State<SignUpPage> {
           context: context);
     }
 
-    //add user details
-    addUserDetails(
-        emailController.text.trim(),
-        _firstNameController.text.trim(),
-        _lastNameController.text.trim(),
-        int.parse(_ageController.text.trim()),
-        _genreController.text.trim(),
-        _countryController.text.trim());
+    if (_image != null) {
+      final uniqueFileName = DateTime.now().millisecondsSinceEpoch.toString();
+      final referenceRoot = FirebaseStorage.instance.ref();
+      final referenceDirImages = referenceRoot.child('images');
+      final referenceImageToUpload = referenceDirImages.child(uniqueFileName);
+
+      try {
+        await referenceImageToUpload.putFile(_image!);
+        final imageUrl = await referenceImageToUpload.getDownloadURL();
+        addUserDetails(
+            emailController.text.trim(),
+            _firstNameController.text.trim(),
+            _lastNameController.text.trim(),
+            int.parse(_ageController.text.trim()),
+            _genreController.text.trim(),
+            _countryController.text.trim(),
+            imageUrl);
+      } catch (e) {
+        // Manejo de errores (puedes agregar un mensaje de error aquí)
+      }
+    } else {
+      // Mostrar un mensaje de que no se ha seleccionado alguna imagen
+      print('No se ha seleccionado alguna imagen');
+    }
   }
 
   void loginUser() {
@@ -61,7 +80,7 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   Future addUserDetails(String email, String firstName, String lastName,
-      int age, String genre, String country) async {
+      int age, String genre, String country, String imageUrl) async {
     await FirebaseFirestore.instance.collection('users').add({
       'email': email,
       'first name': firstName,
@@ -69,6 +88,7 @@ class _SignUpPageState extends State<SignUpPage> {
       'age': age,
       'genre': genre,
       'country': country,
+      'imagen': imageUrl,
     });
   }
 
@@ -127,7 +147,17 @@ class _SignUpPageState extends State<SignUpPage> {
                   const SizedBox(
                     height: 28,
                   ),
-
+                  IconButton(
+                    onPressed: _selectImage,
+                    icon: const Icon(Icons.camera_enhance),
+                  ),
+                  Center(
+                    child: _image == null
+                        ? const Text('No se ha seleccionado ninguna imagen')
+                        : Image.file(_image!),
+                  ),
+                  Text("Logo"),
+                  const SizedBox(height: 15),
                   //email textfield
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 25.0),

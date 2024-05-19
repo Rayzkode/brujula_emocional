@@ -42,6 +42,10 @@ dependencies:
   provider: ^6.1.2
   image_picker: ^1.0.8
   firebase_storage: ^11.6.9
+  google_fonts: ^6.2.1
+  lottie: ^3.0.0
+  url_launcher: ^6.0.6
+  animated_background: ^2.0.0
 
 dev_dependencies:
   flutter_launcher_icons: ^0.13.1
@@ -66,6 +70,7 @@ flutter_launcher_icons:
 flutter:
   assets:
     - assets/images/
+    - assets/animations/
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

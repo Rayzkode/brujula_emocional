@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+  const LoginPage({Key? key}) : super(key: key);
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -19,16 +19,17 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   void dispose() {
-    super.dispose();
     emailController.dispose();
     passwordController.dispose();
+    super.dispose();
   }
 
   void loginUser() {
     FirebaseAuthMethods(FirebaseAuth.instance).loginWithEmail(
-        email: emailController.text,
-        password: passwordController.text,
-        context: context);
+      email: emailController.text,
+      password: passwordController.text,
+      context: context,
+    );
   }
 
   @override
@@ -40,8 +41,9 @@ class _LoginPageState extends State<LoginPage> {
           padding: const EdgeInsets.all(30.0),
           child: Container(
             padding: EdgeInsets.symmetric(
-                horizontal: 2,
-                vertical: MediaQuery.of(context).size.height * 0.16),
+              horizontal: 2,
+              vertical: MediaQuery.of(context).size.height * 0.16,
+            ),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(30),
               color: Colors.white,
@@ -54,10 +56,7 @@ class _LoginPageState extends State<LoginPage> {
                     'assets/images/Compass.png',
                     width: 120,
                   ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  //hello again
+                  const SizedBox(height: 20),
                   const Text(
                     'Hola de nuevo!',
                     style: TextStyle(
@@ -65,77 +64,33 @@ class _LoginPageState extends State<LoginPage> {
                       fontSize: 30,
                     ),
                   ),
-                  const SizedBox(
-                    height: 10,
-                  ),
+                  const SizedBox(height: 10),
                   const Text(
                     'Bienvenido, te extrañamos',
                     style: TextStyle(
                       fontSize: 25,
                     ),
                   ),
-                  const SizedBox(
-                    height: 28,
+                  const SizedBox(height: 28),
+                  _buildTextField(
+                    controller: emailController,
+                    hintText: 'Email',
+                    obscureText: false,
                   ),
-
-                  //email textfield
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: const Color.fromARGB(144, 244, 244, 244),
-                        border: Border.all(color: AppColors.ternaryColor),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.only(left: 20.0),
-                        child: TextField(
-                          controller: emailController,
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: 'Email',
-                          ),
-                        ),
-                      ),
-                    ),
+                  const SizedBox(height: 10),
+                  _buildTextField(
+                    controller: passwordController,
+                    hintText: 'Password',
+                    obscureText: true,
                   ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  //password textfield
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: const Color.fromARGB(144, 244, 244, 244),
-                        border: Border.all(color: AppColors.ternaryColor),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.only(left: 20.0),
-                        child: TextField(
-                          obscureText: true,
-                          controller: passwordController,
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: 'Password',
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  //sign in button
-
+                  const SizedBox(height: 10),
                   ElevatedButton(
-                    onPressed: () {
-                      loginUser();
-                    },
+                    onPressed: loginUser,
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 90, vertical: 20),
+                        horizontal: 90,
+                        vertical: 20,
+                      ),
                       backgroundColor: AppColors.ternaryColor,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -150,11 +105,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                   ),
-
-                  const SizedBox(
-                    height: 10,
-                  ),
-
+                  const SizedBox(height: 10),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -169,9 +120,7 @@ class _LoginPageState extends State<LoginPage> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) {
-                                return SignUpPage();
-                              },
+                              builder: (context) => SignUpPage(),
                             ),
                           );
                         },
@@ -185,9 +134,37 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                     ],
-                  )
+                  ),
                 ],
               ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required String hintText,
+    required bool obscureText,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 25.0),
+      child: Container(
+        decoration: BoxDecoration(
+          color: const Color.fromARGB(144, 244, 244, 244),
+          border: Border.all(color: AppColors.ternaryColor),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Padding(
+          padding: EdgeInsets.only(left: 20.0),
+          child: TextField(
+            controller: controller,
+            obscureText: obscureText,
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              hintText: hintText,
             ),
           ),
         ),

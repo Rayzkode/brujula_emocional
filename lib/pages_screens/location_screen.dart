@@ -1,6 +1,7 @@
 import 'package:brujula_emocional/services/get_clinic_data.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class LocationScreen extends StatefulWidget {
   @override
@@ -37,6 +38,18 @@ class _LocationScreenState extends State<LocationScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
+                child: Text(
+                  "Clinicas a tu alcance",
+                  style: GoogleFonts.playfairDisplay(
+                    letterSpacing: 1,
+                    color: Colors.black,
+                    fontSize: 45,
+                  ),
+                ),
+              ),
               Expanded(
                 child: ListView.builder(
                   itemCount: docIDs.length,

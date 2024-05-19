@@ -44,11 +44,10 @@ class AuthWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final firebaseUser = context.watch<User?>();
+    final user = context.watch<User?>();
 
     // Si hay un usuario autenticado, navega a la página principal (HomePage)
-    if (firebaseUser != null) {
-      print("Si entro aqui pa");
+    if (user != null) {
       return const HomePage();
     }
 
