@@ -1,5 +1,8 @@
 import 'package:animated_background/animated_background.dart';
 import 'package:brujula_emocional/appColors.dart';
+import 'package:brujula_emocional/ejercicios/PresenteScreen.dart';
+import 'package:brujula_emocional/ejercicios/RespiracionScreen.dart';
+import 'package:brujula_emocional/ejercicios/SentidosScreen.dart';
 import 'package:brujula_emocional/services/firebase_auth_methods.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +29,7 @@ class _RelaxScreenState extends State<RelaxScreen>
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage("assets/images/FondoOscuro.png"),
+            image: AssetImage("assets/images/FondoBlnaco.png"),
             fit: BoxFit.cover,
           ),
         ),
@@ -42,16 +45,18 @@ class _RelaxScreenState extends State<RelaxScreen>
                       .get(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Column(
-                        children: [
-                          Center(
-                            child: Lottie.asset(
-                              'assets/animations/Compass.json',
-                              fit: BoxFit.contain,
-                              repeat: true,
+                      return Container(
+                        child: Column(
+                          children: [
+                            Center(
+                              child: Lottie.asset(
+                                'assets/animations/Compass.json',
+                                fit: BoxFit.contain,
+                                repeat: true,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       );
                     } else {
                       if (snapshot.hasError) {
@@ -67,9 +72,9 @@ class _RelaxScreenState extends State<RelaxScreen>
                                 shaderCallback: (Rect bounds) {
                                   return const LinearGradient(
                                     colors: [
-                                      Color.fromARGB(177, 186, 167,
-                                          255), // Puedes usar primaryColor si deseas
-                                      Color.fromARGB(255, 250, 198, 198),
+                                      AppColors
+                                          .cafeColor, // Puedes usar primaryColor si deseas
+                                      Color.fromARGB(255, 102, 76, 68),
                                     ],
                                     begin: Alignment.topCenter,
                                     end: Alignment.bottomCenter,
@@ -96,14 +101,13 @@ class _RelaxScreenState extends State<RelaxScreen>
                               child: AnimatedBackground(
                                 behaviour: RandomParticleBehaviour(
                                   options: const ParticleOptions(
-                                    spawnMaxRadius: 1,
-                                    spawnMinSpeed: 5,
-                                    particleCount: 40,
+                                    spawnMaxRadius: 10,
+                                    spawnMinSpeed: 10,
+                                    particleCount: 50,
                                     spawnMaxSpeed: 10,
                                     spawnOpacity: 0.2,
                                     minOpacity: 0.2,
-                                    baseColor:
-                                        Color.fromARGB(183, 255, 255, 255),
+                                    baseColor: AppColors.secondaryColor,
                                   ),
                                 ),
                                 vsync: this,
@@ -119,14 +123,14 @@ class _RelaxScreenState extends State<RelaxScreen>
                                             width: 150.0,
                                             height: 150.0,
                                             decoration: BoxDecoration(
-                                              gradient: AppColors.gradientColor,
+                                              color: AppColors.secondaryColor,
                                               borderRadius:
                                                   BorderRadius.circular(10),
                                             ),
                                             child: ElevatedButton(
                                               style: ElevatedButton.styleFrom(
                                                 backgroundColor:
-                                                    Colors.transparent,
+                                                    AppColors.secondaryColor,
                                                 padding:
                                                     const EdgeInsets.all(5),
                                                 shape: RoundedRectangleBorder(
@@ -136,7 +140,11 @@ class _RelaxScreenState extends State<RelaxScreen>
                                                 elevation: 8,
                                               ),
                                               onPressed: () {
-                                                // Acción del botón
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            const PresenteScreen()));
                                               },
                                               child: Column(
                                                 children: [
@@ -161,14 +169,15 @@ class _RelaxScreenState extends State<RelaxScreen>
                                             width: 150.0,
                                             height: 150.0,
                                             decoration: BoxDecoration(
-                                              gradient: AppColors.gradientColor,
+                                              gradient:
+                                                  AppColors.gradientColor1,
                                               borderRadius:
                                                   BorderRadius.circular(10),
                                             ),
                                             child: ElevatedButton(
                                               style: ElevatedButton.styleFrom(
                                                 backgroundColor:
-                                                    Colors.transparent,
+                                                    AppColors.secondaryColor,
                                                 padding:
                                                     const EdgeInsets.all(5),
                                                 shape: RoundedRectangleBorder(
@@ -178,7 +187,11 @@ class _RelaxScreenState extends State<RelaxScreen>
                                                 elevation: 8,
                                               ),
                                               onPressed: () {
-                                                // Acción del botón
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            const RespiracionScreen()));
                                               },
                                               child: Column(
                                                 children: [
@@ -203,14 +216,14 @@ class _RelaxScreenState extends State<RelaxScreen>
                                             width: 150.0,
                                             height: 150.0,
                                             decoration: BoxDecoration(
-                                              gradient: AppColors.gradientColor,
+                                              color: AppColors.secondaryColor,
                                               borderRadius:
                                                   BorderRadius.circular(10),
                                             ),
                                             child: ElevatedButton(
                                               style: ElevatedButton.styleFrom(
                                                 backgroundColor:
-                                                    Colors.transparent,
+                                                    AppColors.secondaryColor,
                                                 padding:
                                                     const EdgeInsets.symmetric(
                                                         horizontal: 40),
@@ -223,7 +236,13 @@ class _RelaxScreenState extends State<RelaxScreen>
                                               onPressed: () {
                                                 // Acción del botón
                                               },
-                                              child: const Text('Botón Fijo'),
+                                              child: const Text(
+                                                'Actividad bloqueada',
+                                                style: TextStyle(
+                                                    fontSize: 12,
+                                                    color: Colors.white),
+                                                textAlign: TextAlign.center,
+                                              ),
                                             ),
                                           ),
                                         ),
@@ -247,7 +266,7 @@ class _RelaxScreenState extends State<RelaxScreen>
                                             child: ElevatedButton(
                                               style: ElevatedButton.styleFrom(
                                                 backgroundColor:
-                                                    Colors.transparent,
+                                                    AppColors.secondaryColor,
                                                 padding:
                                                     const EdgeInsets.all(5),
                                                 shape: RoundedRectangleBorder(
@@ -257,7 +276,11 @@ class _RelaxScreenState extends State<RelaxScreen>
                                                 elevation: 8,
                                               ),
                                               onPressed: () {
-                                                // Acción del botón
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            const SentidosScreen()));
                                               },
                                               child: Column(
                                                 children: [
@@ -283,14 +306,15 @@ class _RelaxScreenState extends State<RelaxScreen>
                                             width: 150.0,
                                             height: 150.0,
                                             decoration: BoxDecoration(
-                                              gradient: AppColors.gradientColor,
+                                              gradient:
+                                                  AppColors.gradientColorBloq,
                                               borderRadius:
                                                   BorderRadius.circular(10),
                                             ),
                                             child: ElevatedButton(
                                               style: ElevatedButton.styleFrom(
                                                 backgroundColor:
-                                                    Colors.transparent,
+                                                    AppColors.secondaryColor,
                                                 padding:
                                                     const EdgeInsets.symmetric(
                                                         horizontal: 40),
@@ -303,7 +327,13 @@ class _RelaxScreenState extends State<RelaxScreen>
                                               onPressed: () {
                                                 // Acción del botón
                                               },
-                                              child: const Text('Botón Fijo'),
+                                              child: const Text(
+                                                'Actividad bloqueada',
+                                                style: TextStyle(
+                                                    fontSize: 12,
+                                                    color: Colors.white),
+                                                textAlign: TextAlign.center,
+                                              ),
                                             ),
                                           ),
                                         ),

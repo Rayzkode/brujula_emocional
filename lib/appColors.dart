@@ -8,16 +8,20 @@ class AppColors {
 
   static LinearGradient get gradientColor => const LinearGradient(
         colors: [
-          Color.fromARGB(106, 29, 1, 1), // Puedes usar primaryColor si deseas
-          Color.fromARGB(255, 71, 0, 112), // Puedes usar ternaryColor si deseas
+          Color.fromARGB(
+              255, 255, 255, 255), // Puedes usar primaryColor si deseas
+          Color.fromARGB(
+              255, 187, 209, 196), // Puedes usar ternaryColor si deseas
         ],
         begin: Alignment.topCenter,
         end: Alignment.bottomCenter,
       );
   static LinearGradient get gradientColor1 => const LinearGradient(
         colors: [
-          Color.fromARGB(106, 29, 1, 1), // Puedes usar primaryColor si deseas
-          Color.fromARGB(255, 21, 0, 112), // Puedes usar ternaryColor si deseas
+          Color.fromARGB(
+              106, 187, 209, 196), // Puedes usar primaryColor si deseas
+          Color.fromARGB(
+              255, 255, 191, 252), // Puedes usar ternaryColor si deseas
         ],
         begin: Alignment.topCenter,
         end: Alignment.bottomCenter,
@@ -33,9 +37,19 @@ class AppColors {
       );
   static LinearGradient get gradientColor3 => const LinearGradient(
         colors: [
-          Color.fromARGB(106, 29, 1, 1), // Puedes usar primaryColor si deseas
           Color.fromARGB(
-              200, 224, 209, 0), // Puedes usar ternaryColor si deseas
+              255, 255, 255, 255), // Puedes usar primaryColor si deseas
+          Color.fromARGB(
+              255, 255, 238, 0), // Puedes usar ternaryColor si deseas
+        ],
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+      );
+  static LinearGradient get gradientColorBloq => const LinearGradient(
+        colors: [
+          Color.fromARGB(106, 92, 92, 92), // Puedes usar primaryColor si deseas
+          Color.fromARGB(
+              120, 252, 252, 252), // Puedes usar ternaryColor si deseas
         ],
         begin: Alignment.topCenter,
         end: Alignment.bottomCenter,

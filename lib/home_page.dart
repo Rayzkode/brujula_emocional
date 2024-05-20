@@ -3,6 +3,7 @@ import 'package:brujula_emocional/pages_screens/WelcomeScreen.dart';
 import 'package:brujula_emocional/pages_screens/login_page.dart';
 import 'package:brujula_emocional/services/firebase_auth_methods.dart';
 import 'package:brujula_emocional/side_screens/ConfigScreen.dart';
+import 'package:brujula_emocional/side_screens/PinScreen.dart';
 import 'package:brujula_emocional/side_screens/TemaScreen.dart';
 import 'package:brujula_emocional/side_screens/TermsScreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -320,7 +321,8 @@ class _HomePageState extends State<HomePage> {
       _buildDrawerItem(
         icon: Icons.lock,
         title: 'PIN',
-        onTap: () => Navigator.pop(context),
+        onTap: () => Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const PinScreen())),
       ),
       _buildDrawerItem(
         icon: Icons.settings,

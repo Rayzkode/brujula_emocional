@@ -18,10 +18,34 @@ llevar la pantalla de configuracion*/
 import 'package:flutter/material.dart';
 
 class ConfigScreen extends StatelessWidget {
-  const ConfigScreen({super.key});
+  const ConfigScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Configuración'),
+      ),
+      body: ListView(
+        children: [
+          _buildConfigItem(context, 'Perfil', Icons.person),
+          _buildConfigItem(context, 'Idiomas', Icons.language),
+          _buildConfigItem(context, 'Apartado Legal', Icons.gavel),
+          _buildConfigItem(context, 'Privacidad', Icons.lock),
+          _buildConfigItem(context, 'Acerca de la App', Icons.info),
+          _buildConfigItem(context, 'Cerrar Sesión', Icons.logout),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildConfigItem(BuildContext context, String title, IconData icon) {
+    return ListTile(
+      leading: Icon(icon),
+      title: Text(title),
+      onTap: () {
+        //* Aquí se navegaría a la pantalla correspondiente según el ítem seleccionado ?)
+      },
+    );
   }
 }

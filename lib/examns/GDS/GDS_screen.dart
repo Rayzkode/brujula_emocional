@@ -16,6 +16,35 @@ class _GDS_screenState extends State<GDS_screen> {
   int questionIndex = 0;
   int score = 0;
 
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _showWelcomeDialog();
+    });
+  }
+
+  void _showWelcomeDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Bienvenido al examen GDS'),
+          content: Text(
+              'El siguiente examen es un examen avalado y respaldado por especialistas en el area. Te recordamos que los examenes no son un autodiagnostico certificado y respaldado como lo serie el de un profesional. Los examenes que te proporcionamos son una guia, una herramienta la cual te ayudara a tener una nocion de como te encuentras mentalmente'),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Cerrar'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   void pickAnswer(int value) {
     setState(() {
       selectedAnswerIndices[questionIndex] = value;

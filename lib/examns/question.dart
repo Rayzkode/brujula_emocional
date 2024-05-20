@@ -8,4 +8,6 @@ class Question {
     required this.question,
     required this.options,
   });
+
+  get answer => null;
 }
